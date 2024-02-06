@@ -24,7 +24,7 @@ export const CartItem = memo(function Item({ id, value: { price, quantity, food 
 			<div className='flex-auto text-xl'>
 				<h2 className='font-bold'>{food.name}</h2>
 				<p className='font-extrabold text-lime-600 dark:text-lime-500 lg:text-center'>
-					{price} грн.
+					{food.price} грн.
 				</p>
 				<div className='flex justify-start items-center lg:justify-center mt-3 gap-4'>
 					<button>

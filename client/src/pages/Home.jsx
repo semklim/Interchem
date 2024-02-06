@@ -3,10 +3,14 @@ import FoodCard from '../components/FoodCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentShift } from '../redux/cart/cartSlice';
 
+const now = new Date();
+let tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+
 export default memo(function Home() {
 	const [posts, setPosts] = useState([]);
 	const { currentShift, bill } = useSelector((state) => state.cart);
 	const dispatch = useDispatch();
+
 	const onChangeHandle = (e) => {
 		dispatch(setCurrentShift(e.target.value));
 	};
@@ -24,11 +28,12 @@ export default memo(function Home() {
 			<h1 className='flex flex-col text-center text-4xl font-bold mt-2 lg:font-extrabold lg:text-6xl'>
 				Меню
 				<span className='text-xl'>
+					на{' '}
 					{new Intl.DateTimeFormat('uk', {
 						year: '2-digit',
 						month: '2-digit',
 						day: '2-digit',
-					}).format(new Date())}
+					}).format(tomorrow)}
 				</span>
 			</h1>
 			<form className='flex items-center text-xl justify-evenly my-6 lg:text-xl lg:justify-center lg:gap-20 select-none'>
