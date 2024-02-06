@@ -35,11 +35,14 @@ export default memo(function Home() {
 				Меню
 				<span className='text-xl'>
 					на{' '}
-					{new Intl.DateTimeFormat('uk', {
-						year: '2-digit',
-						month: '2-digit',
-						day: '2-digit',
-					}).format(tomorrow.current)}
+					<span className='capitalize'>
+						{new Intl.DateTimeFormat('uk', {
+							year: '2-digit',
+							month: '2-digit',
+							day: '2-digit',
+							weekday: 'short',
+						}).format(tomorrow.current)}
+					</span>
 				</span>
 			</h1>
 			<form className='flex items-center text-xl justify-evenly my-6 sm:text-xl sm:justify-center sm:gap-20 select-none'>
