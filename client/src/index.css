@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+	height: 100dvh;
+}
+
+.ql-editor {
+	font-size: 1.05rem;
+}
+
+.post-content p {
+	margin-bottom: 0.5rem;
+}
+
+.post-content h1 {
+	font-size: 1.5rem;
+	font-weight: 600;
+	font-family: sans-serif;
+	margin: 1.5rem 0;
+}
+
+.post-content h2 {
+	font-size: 1.4rem;
+	font-family: sans-serif;
+	margin: 1.5rem 0;
+}
+
+.post-content a {
+	color: rgb(73, 149, 199);
+	text-decoration: none;
+}
+
+.post-content a:hover {
+	text-decoration: underline;
+}
+
+.dark .post-content a {
+	color: red;
+}
+
+.active {
+	--tw-gradient-from: #70b441;
+	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+	--tw-gradient-to: #0e803c;
+	background-image: linear-gradient(to bottom left, var(--tw-gradient-stops));
+	--tw-text-opacity: 1;
+	color: whitesmoke;
+}
+
+.active span {
+	background: transparent !important;
+	color: whitesmoke;
+}
+
+.m-0 {
+	margin: 0 !important;
+}
