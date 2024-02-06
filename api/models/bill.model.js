@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { FoodSchema } from './food.model.js';
 
-var subSchema = mongoose.Schema({
+const subSchema = mongoose.Schema({
   food: {
     type: FoodSchema,
     required: true,

@@ -20,7 +20,7 @@ export const CartItem = memo(function Item({ id, value: { price, quantity, food 
 	};
 
 	return (
-		<section className='mx-auto max-w-6xl flex bg-stone-200 text-gray-900 dark:text-white mt-8 px-5 py-2 dark:bg-slate-800 rounded-xl'>
+		<section className='mx-auto max-w-6xl flex shadow-md bg-white text-gray-900 dark:bg-gray-800 dark:text-white mt-8 px-5 py-2 dark:bg-slate-800 rounded-xl'>
 			<div className='flex-auto text-xl'>
 				<h2 className='font-bold'>{food.name}</h2>
 				<p className='font-extrabold text-lime-600 dark:text-lime-500 lg:text-center'>

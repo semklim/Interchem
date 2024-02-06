@@ -1,35 +1,68 @@
 import { useDispatch } from 'react-redux';
-import { addFoodToBill } from '../redux/cart/cartSlice';
+import {
+	addFoodToBill,
+	decrementFood,
+	deleteFoodFromBill,
+	incrementFood,
+} from '../redux/cart/cartSlice';
 import { memo, useState } from 'react';
+import { LuMinusCircle, LuPlusCircle } from 'react-icons/lu';
 
-export default memo(function FoodCard({ food, quantity = 0, currentShift, billShift = 'first' }) {
+export default memo(function FoodCard({ food, billQuantity = 0 }) {
 	const dispatch = useDispatch();
-	const [newQuantity, setNewQuantity] = useState(quantity);
-	let activeStyle =
-		' active:dark:shadow-[0_3px_5px_2px_rgba(14,159,110,0.8)] active:dark:text-white active:shadow-[0_3px_5px_2px_rgba(14,159,110,0.8)] active:translate-y-1';
+	const [quantity, setQuantity] = useState(billQuantity);
 
-	if (newQuantity > 3 || currentShift !== billShift) {
-		activeStyle =
-			' active:dark:bg-red-600 active:dark:text-white active:bg-red-600 active:text-white';
-	}
+	const incrementHandler = (e) => {
+		if (quantity <= 0) {
+			dispatch(addFoodToBill(food));
+		} else {
+			dispatch(incrementFood({ id: food._id }));
+		}
+		if (quantity < 3) setQuantity((prev) => (prev += 1));
+	};
 
-	const onClickHandle = (e) => {
-		setNewQuantity((prev) => (prev += 1));
-		dispatch(addFoodToBill(food));
+	const decrementHandler = (e) => {
+		if (quantity > 1) {
+			dispatch(decrementFood({ id: food._id }));
+		} else {
+			dispatch(deleteFoodFromBill({ id: food._id }));
+		}
+		setQuantity((prev) => (prev -= 1));
 	};
 
 	return (
 		<div
 			className={
-				'group h-[85px] lg:h-[60px] border-2 bg-stone-200 text-gray-900 dark:bg-slate-800 dark:text-white border-transparent overflow-hidden rounded-lg transition-all flex-[1_1_120px] lg:flex-[1_1_45%] text-center flex flex-col justify-strech items-center duration-200' +
-				activeStyle
+				'group h-[90px] relative p-5 shadow-md bg-white text-gray-900 dark:bg-gray-800 dark:text-white overflow-hidden rounded-lg transition-all flex-[1_1_49%] sm:flex-[1_1_40%] flex items-center duration-200'
 			}
-			onClick={onClickHandle}
 		>
-			<h2 className='headerName flex-auto font-bold text-xl lg:text-2xl'>{food.name}</h2>
-			<p className='headerPrice flex-initial font-medium text-lime-600 dark:text-lime-500  text-xl'>
-				{food.price} грн.
-			</p>
+			<div>
+				<h2 className='headerName font-bold text-xl lg:text-2xl'>{food.name}</h2>
+				<p className='headerPrice font-medium text-lime-600 dark:text-lime-500  text-xl'>
+					{food.price} грн.
+				</p>
+			</div>
+			<div className=' absolute bottom-2 right-2 flex justify-start items-center lg:justify-center mt-3 gap-4 '>
+				{quantity > 0 && (
+					<>
+						<button>
+							<LuMinusCircle
+								className='text-lime-600 dark:text-lime-500'
+								size={25}
+								onClick={decrementHandler}
+							/>
+						</button>
+						<span className='select-none text-lg font-bold'>{quantity}</span>
+					</>
+				)}
+				<button>
+					<LuPlusCircle
+						className='text-lime-600 dark:text-lime-500'
+						size={25}
+						onClick={incrementHandler}
+					/>
+				</button>
+			</div>
 		</div>
 	);
 });

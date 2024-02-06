@@ -1,14 +1,14 @@
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CartItem } from './CartItem';
-import { CartHeader } from './CartHeader';
 import { reset } from '../redux/cart/cartSlice';
+import { CartItem } from '../components/CartItem';
+import { CartHeader } from '../components/CartHeader';
 import img from '../assets/choose-food.webp';
-import { useNavigate } from 'react-router-dom';
-export const Cart = () => {
+export default function Cart() {
 	const { amountFood, bill, totalPrice, currentShift } = useSelector((state) => state.cart);
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
 	const { currentUser } = useSelector((state) => state.user);
+	const [showThanks, setShowThanks] = useState(false);
 	const billArr = Object.values(bill).slice(1);
 
 	const isHidden = amountFood > 0 ? '' : ' hidden';
@@ -18,7 +18,7 @@ export const Cart = () => {
 		? ' bg-neutral-500'
 		: ' bg-gradient-to-bl from-[#70b441] to-[#0e803c]';
 
-	const payHandler = async (e) => {
+	const payHandler = async () => {
 		if (!currentUser) {
 			return;
 		}
@@ -40,13 +40,31 @@ export const Cart = () => {
 			});
 			if (res.ok) {
 				dispatch(reset());
-				navigate('/');
+				setShowThanks(true);
 			}
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
+	if (showThanks) {
+		return (
+			<section className='flex flex-col min-h-[calc(100vh_-_104px)] m-5 relative'>
+				<div className='flex justify-center flex-col items-center flex-auto'>
+					<div className='flex-auto flex justify-center items-center'>
+						<div className='py-5 bg-stone-200 text-gray-900 dark:bg-slate-800 dark:text-white rounded-lg'>
+							<h1 className='font-bold text-4xl text-center'>
+								Ви оформили замовлення <span className='text-lime-600 block mt-10'>Успішно!</span>
+							</h1>
+						</div>
+					</div>
+					<p className=' justify-items-end text-xl text-center'>
+						Переглянути або відмінити чек можна в особистому кабінеті
+					</p>
+				</div>
+			</section>
+		);
+	}
 	return (
 		<section className='flex flex-col min-h-[calc(100vh_-_104px)] m-5 relative'>
 			<div className={'flex-auto' + aditionalStyle}>
@@ -73,4 +91,4 @@ export const Cart = () => {
 			</div>
 		</section>
 	);
-};
+}

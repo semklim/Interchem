@@ -13,9 +13,17 @@ export const FoodSchema = new mongoose.Schema(
     shift: {
       type: String,
       required: true
+    },
+    createdAt: {
+      type: Date,
+      required: true
+    },
+    updatedAt: {
+      type: Date,
+      required: true
     }
   },
-  { timestamps: true }
+  { timestamps: { createdAt: false, updatedAt: false } }
 );
 
 const food = mongoose.model('food', FoodSchema);

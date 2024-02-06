@@ -2,6 +2,7 @@ import { Modal, Table, Button } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import { billIsExpires } from '../helpers/dateHelpers';
 
 export default function DashComments() {
 	const { currentUser } = useSelector((state) => state.user);
@@ -9,10 +10,11 @@ export default function DashComments() {
 	const [showMore, setShowMore] = useState(true);
 	const [showModal, setShowModal] = useState(false);
 	const [billIdToDelete, setBillIdToDelete] = useState('');
+
 	useEffect(() => {
 		const fetchAllBills = async () => {
 			try {
-				const res = await fetch('/api/bill/all?sort=desc');
+				const res = await fetch('/api/bill/all');
 				const data = await res.json();
 				if (res.ok) {
 					setBills(data.allBills);
@@ -66,41 +68,51 @@ export default function DashComments() {
 						<Table.Head>
 							<Table.HeadCell>Дата замовлення</Table.HeadCell>
 							<Table.HeadCell>Страви</Table.HeadCell>
-							<Table.HeadCell>Сума</Table.HeadCell>
+							<Table.HeadCell>Загальна сума</Table.HeadCell>
 							<Table.HeadCell>Відмінити</Table.HeadCell>
 						</Table.Head>
 						{bills.map((bill) => (
-							<Table.Body className='divide-y' key={bill._id}>
-								<Table.Row className='bg-white border-2 dark:border-gray-700 dark:bg-gray-800'>
+							<Table.Body
+								className='divide-y border-b-2 last:border-b-0 dark:border-gray-700'
+								key={bill._id}
+							>
+								<Table.Row className='bg-white dark:bg-gray-800'>
 									<Table.Cell>{new Date(bill.orderedAt).toLocaleDateString('uk')}</Table.Cell>
 									<Table.Cell>
 										<Table className='text-center border-2'>
 											<Table.Head>
 												<Table.HeadCell>Страва</Table.HeadCell>
 												<Table.HeadCell>Кількість</Table.HeadCell>
+												<Table.HeadCell>Ціна/1шт</Table.HeadCell>
 											</Table.Head>
 											<Table.Body>
-												{bill.items.map(({ food: { name, _id }, quantity }) => (
+												{bill.items.map(({ food: { name, _id, price }, quantity }) => (
 													<Table.Row key={_id + bill._id}>
 														<Table.Cell className='border-2'>{name}</Table.Cell>
 														<Table.Cell className='border-2'>{quantity}</Table.Cell>
+														<Table.Cell className='border-2'>{price} грн.</Table.Cell>
 													</Table.Row>
 												))}
 											</Table.Body>
 										</Table>
 									</Table.Cell>
 									<Table.Cell>{bill.totalPrice} грн.</Table.Cell>
-									<Table.Cell>
-										<span
-											onClick={() => {
-												setShowModal(true);
-												setBillIdToDelete(bill._id);
-											}}
-											className='font-medium text-red-500 hover:underline cursor-pointer'
-										>
-											Відмінити
-										</span>
-									</Table.Cell>
+									{billIsExpires(bill.createdAt) ? (
+										<Table.Cell>Чек поверненню не підлягає</Table.Cell>
+									) : (
+										<Table.Cell>
+											<Button className='bg-gradient-to-bl from-[#b44141] to-[#800e0e] hover:p-1 transition-all duration-300'>
+												<span
+													onClick={() => {
+														setShowModal(true);
+														setBillIdToDelete(bill._id);
+													}}
+												>
+													Відмінити
+												</span>
+											</Button>
+										</Table.Cell>
+									)}
 								</Table.Row>
 							</Table.Body>
 						))}

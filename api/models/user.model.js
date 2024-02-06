@@ -1,5 +1,20 @@
 import mongoose from 'mongoose';
 
+const statisticsSchema = mongoose.Schema({
+  totalBuns: {
+    type: Number,
+  },
+  totalBunsLastMonth: {
+    type: Number,
+  },
+  totalSpend: {
+    type: String,
+  },
+  totalSpendLastMonth: {
+    type: String,
+  },
+}, { timestamps: true });
+
 export const userSchema = new mongoose.Schema(
   {
     username: {
@@ -25,6 +40,15 @@ export const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    statistics: {
+      type: statisticsSchema,
+      default: {
+        totalBuns: 0,
+        totalBunsLastMonth: 0,
+        totalSpend: '0',
+        totalSpendLastMonth: '0',
+      }
+    }
   },
   { timestamps: true }
 );

@@ -5,27 +5,9 @@ import { FaMoneyBillAlt, FaMoneyCheckAlt } from 'react-icons/fa';
 import { LuCroissant } from 'react-icons/lu';
 import { Button, Table } from 'flowbite-react';
 import { Link } from 'react-router-dom';
-
-const formateDate = (date) => {
-	return new Intl.DateTimeFormat('uk', {
-		weekday: 'long',
-		year: '2-digit',
-		month: '2-digit',
-		day: '2-digit',
-		hour: 'numeric',
-		minute: 'numeric',
-	}).format(new Date(date));
-};
-
-const billIsExpires = (date) => {
-	const startTime = new Date(date).getTime();
-	const endTime = new Date().getTime();
-	const duration = (endTime - startTime) / 1000;
-	return duration > 86400;
-};
+import { billIsExpires, formateDate } from '../helpers/dateHelpers';
 
 export default function DashboardComp() {
-	const [bills, setBills] = useState([]);
 	const [totalBills, setTotalBills] = useState(0);
 	const [lastMonthBills, setLastMonthBills] = useState(0);
 	const [lastDayBills, setLastDayBills] = useState(0);
@@ -53,7 +35,6 @@ export default function DashboardComp() {
 				const res = await fetch('/api/bill/all?sort=desc');
 				const data = await res.json();
 				if (res.ok) {
-					setBills(data.allBills);
 					setTotalBills(data.totalBills);
 					setLastMonthBills(data.totalLastMonthBills);
 				}
@@ -81,7 +62,7 @@ export default function DashboardComp() {
 	return (
 		<div className='p-3 md:mx-auto'>
 			<div className='flex-wrap flex gap-4 justify-center'>
-				<div className='flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md'>
+				<div className='flex flex-col p-3 bg-white dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md'>
 					<div className='flex justify-between'>
 						<div className=''>
 							<h3 className='text-gray-500 text-md uppercase'>З&apos;їдено булочок</h3>
@@ -96,7 +77,7 @@ export default function DashboardComp() {
 						<div className='text-gray-500'>За минулий місяць</div>
 					</div>
 				</div>
-				<div className='flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md'>
+				<div className='flex flex-col p-3 bg-white dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md'>
 					<div className='flex justify-between'>
 						<div className=''>
 							<h3 className='text-gray-500 text-md uppercase'>Всього замовлень</h3>
@@ -112,7 +93,7 @@ export default function DashboardComp() {
 						<div className='text-gray-500'>За минулий місяць</div>
 					</div>
 				</div>
-				<div className='flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md'>
+				<div className='flex flex-col p-3 bg-white dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md'>
 					<div className='flex justify-between'>
 						<div className=''>
 							<h3 className='text-gray-500 text-md uppercase'>Всього витрачено</h3>
@@ -130,7 +111,7 @@ export default function DashboardComp() {
 				</div>
 			</div>
 			<div className='flex flex-wrap gap-4 py-3 mx-auto justify-center'>
-				<div className='md:w-full flex flex-col shadow-md p-2 rounded-md dark:bg-gray-800 [&>*:nth-child(n+2)]:mt-3'>
+				<div className='md:w-full flex flex-col shadow-md p-2 rounded-md bg-white dark:bg-gray-800 [&>*:nth-child(n+2)]:mt-3'>
 					<div className='flex justify-between  p-3 font-semibold'>
 						<h1 className='text-center p-2'>Останні чеки</h1>
 						<Link to={'/dashboard?tab=bills'}>
@@ -138,7 +119,7 @@ export default function DashboardComp() {
 								className='bg-gradient-to-br from-[#70b441] to-[#0e803c] enabled:hover:bg-gradient-to-bl'
 								outline
 							>
-								Всі чеки
+								Всі Чеки
 							</Button>
 						</Link>
 					</div>

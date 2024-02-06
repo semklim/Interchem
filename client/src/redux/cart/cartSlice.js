@@ -19,7 +19,10 @@ const cartSlice = createSlice({
       const food = action.payload;
       const id = food['_id'];
       const price = Number(food.price);
-      if (!state.bill.shift || state.amountFood === 0) state.bill.shift = state.currentShift;
+      if (state.bill.shift !== state.currentShift && state.amountFood === 0) {
+        state.currentShift = food.shift;
+        state.bill.shift = state.currentShift;
+      }
 
       if (state.currentShift === state.bill.shift) {
         if (!state.bill[id]) {

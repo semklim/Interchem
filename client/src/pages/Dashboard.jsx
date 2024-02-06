@@ -18,7 +18,7 @@ export default function Dashboard() {
 		}
 	}, [location.search]);
 	return (
-		<div className='flex flex-col md:flex-row'>
+		<div className='min-h-[calc(100vh_-_64px)] flex flex-col md:flex-row'>
 			<div className='sticky top-0 z-10 md:static md:w-56 bg-gray-50 dark:bg-gray-800'>
 				{/* Sidebar */}
 				<DashSidebar />

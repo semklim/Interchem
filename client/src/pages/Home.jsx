@@ -1,27 +1,33 @@
-import { useEffect, useState, memo } from 'react';
+import { useEffect, useState, memo, useRef } from 'react';
 import FoodCard from '../components/FoodCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentShift } from '../redux/cart/cartSlice';
-
-const now = new Date();
-let tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+import { billIsExpires } from '../helpers/dateHelpers';
 
 export default memo(function Home() {
-	const [posts, setPosts] = useState([]);
+	const [foods, setFoods] = useState([]);
 	const { currentShift, bill } = useSelector((state) => state.cart);
 	const dispatch = useDispatch();
+	const tomorrow = useRef(new Date());
 
 	const onChangeHandle = (e) => {
 		dispatch(setCurrentShift(e.target.value));
 	};
 
 	useEffect(() => {
-		const fetchPosts = async () => {
+		const fetchFoods = async () => {
 			const res = await fetch('/api/food-by-shift?shift=' + currentShift);
 			const data = await res.json();
-			setPosts(data.food);
+			const now = new Date(data.food[0].createdAt);
+			const isExpires = billIsExpires(now.toISOString());
+			if (isExpires) {
+				setFoods([]);
+			} else {
+				setFoods(data.food);
+				tomorrow.current = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+			}
 		};
-		fetchPosts();
+		fetchFoods();
 	}, [currentShift]);
 	return (
 		<div className='max-w-6xl mx-auto px-3 flex flex-col'>
@@ -33,10 +39,10 @@ export default memo(function Home() {
 						year: '2-digit',
 						month: '2-digit',
 						day: '2-digit',
-					}).format(tomorrow)}
+					}).format(tomorrow.current)}
 				</span>
 			</h1>
-			<form className='flex items-center text-xl justify-evenly my-6 lg:text-xl lg:justify-center lg:gap-20 select-none'>
+			<form className='flex items-center text-xl justify-evenly my-6 sm:text-xl sm:justify-center sm:gap-20 select-none'>
 				<label
 					className={`${currentShift === 'first' && 'active rounded-lg font-bold'} p-2`}
 					htmlFor='firstShift'
@@ -68,17 +74,20 @@ export default memo(function Home() {
 					Друга зміна
 				</label>
 			</form>
-			{posts && posts.length > 0 && (
-				<div className='flex flex-wrap gap-4 mb-3 lg:max-w-3xl mx-auto select-none'>
-					{posts.map((food) => (
+			{foods && foods.length > 0 ? (
+				<div className='flex flex-wrap gap-4 mb-3 sm:max-w-3xl mx-auto select-none'>
+					{foods.map((food) => (
 						<FoodCard
 							key={food._id}
 							food={food}
-							quantity={bill[food._id] && bill[food._id].quantity}
-							currentShift={currentShift}
-							billShift={bill[food._id] && bill[food._id].shift}
+							billQuantity={bill[food._id] && bill[food._id].quantity}
 						/>
 					))}
+				</div>
+			) : (
+				<div className=' mt-40 flex justify-center items-center flex-col flex-auto text-2xl text-center select-none'>
+					<h1 className='my-3 font-semibold uppercase'>Меню оновлюється.</h1>
+					<p>Зачекайте будь-ласка.</p>
 				</div>
 			)}
 		</div>

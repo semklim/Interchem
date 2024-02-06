@@ -1,15 +1,5 @@
 import Bill from "../models/bill.model.js";
-
-
-const createDateBeforeToday = ({ year = 0, month = 0, day = 0 }) => {
-  const now = new Date();
-  return new Date(
-    now.getFullYear() - year,
-    now.getMonth() - month,
-    now.getDate() - day
-  ).toISOString();
-}
-
+import { createDateBeforeToday } from "../utils/createDateBeforeToday.js";
 
 export const createBill = async (req, res, next) => {
   if (!req.body.userId || !req.body.items || !req.body.items[0] || !req.body.totalPrice) {
@@ -37,10 +27,13 @@ export const getAllBills = async (req, res, next) => {
   const sortDirection = req.query.sort === 'asc' ? 1 : -1;
   const limit = parseInt(req.query.limit) || 9;
   try {
-    const totalBills = await Bill.countDocuments();
+    const totalBills = await Bill.countDocuments({ userId: req.user.id });
     const totalLastMonthBills = await Bill.countDocuments({
       createdAt: { $gte: createDateBeforeToday({ month: 1 }) },
+      userId: req.user.id
     }).exec();
+
+
     const allBills = await Bill.find({ userId: req.user.id })
       .sort({ createdAt: sortDirection })
       .skip(startIndex)

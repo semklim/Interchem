@@ -1,12 +1,18 @@
 import Food from '../models/food.model.js';
+import { createDateBeforeToday } from '../utils/createDateBeforeToday.js';
 import { errorHandler } from '../utils/error.js';
 
 export const create = async (req, res, next) => {
   if (!req.body.name || !req.body.price) {
     return next(errorHandler(400, 'Please provide all required fields'));
   }
+
+  const createdAt = new Date(new Date().setHours(8, 20, 0, 0)).toISOString();
+
   const newFood = new Food({
     ...req.body,
+    createdAt,
+    updatedAt: createdAt,
   });
   try {
     const savedPost = await newFood.save();
@@ -18,7 +24,9 @@ export const create = async (req, res, next) => {
 
 export const getfoods = async (req, res, next) => {
   try {
-    const food = await Food.find();
+    const food = await Food.find({
+      createdAt: { $gte: createDateBeforeToday({ day: 1 }) }
+    });
     res.status(200).json({
       food,
     });

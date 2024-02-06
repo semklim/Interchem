@@ -56,7 +56,7 @@ export default function DashSidebar() {
 					{currentUser && (
 						<Link to='/dashboard?tab=bills'>
 							<Sidebar.Item active={tab === 'bills' || !tab} icon={FaMoneyCheckAlt} as='div'>
-								Усі Чеки
+								Всі Чеки
 							</Sidebar.Item>
 						</Link>
 					)}
