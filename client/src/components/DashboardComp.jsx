@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { HiArrowNarrowUp } from 'react-icons/hi';
-import { FaMoneyBillAlt, FaMoneyCheckAlt, FaCoffee } from 'react-icons/fa';
+import { FaMoneyBillAlt, FaMoneyCheckAlt } from 'react-icons/fa';
+import { LuCroissant } from 'react-icons/lu';
 import { Button, Table } from 'flowbite-react';
 import { Link } from 'react-router-dom';
 
@@ -83,10 +84,16 @@ export default function DashboardComp() {
 				<div className='flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md'>
 					<div className='flex justify-between'>
 						<div className=''>
-							<h3 className='text-gray-500 text-md uppercase'>Випито чашок Кофе</h3>
-							<p className='text-2xl'>10</p>
+							<h3 className='text-gray-500 text-md uppercase'>З&apos;їдено булочок</h3>
+							<p className='text-2xl'>0</p>
 						</div>
-						<FaCoffee className='bg-teal-600  text-white rounded-full text-5xl p-3 shadow-lg' />
+						<LuCroissant className='bg-teal-600  text-white rounded-full text-5xl p-3 shadow-lg' />
+					</div>
+					<div className='flex  gap-2 text-sm'>
+						<span className='text-green-500 flex items-center'>
+							<HiArrowNarrowUp />0
+						</span>
+						<div className='text-gray-500'>За минулий місяць</div>
 					</div>
 				</div>
 				<div className='flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md'>
