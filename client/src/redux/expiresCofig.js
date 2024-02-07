@@ -3,7 +3,7 @@ import { userInitialState } from "./user/userSlice";
 import { cartInitialState } from "./cart/cartSlice";
 
 const fiveMinutes = 60 * 5;
-const sixMonth = 6 * 31 * 24 * 3600;
+const oneWeek = 7 * 24 * 3600;
 
 const defaultOption = {
   // (Optional) Key to be used for the time relative to which store is to be expired
@@ -25,7 +25,7 @@ const cartExpire = expireReducer('cart', {
 const userExpire = expireReducer('user', {
   ...defaultOption,
   expiredState: userInitialState,
-  expireSeconds: sixMonth,
+  expireSeconds: oneWeek,
 });
 
 
