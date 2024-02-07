@@ -35,7 +35,7 @@ export const getAllBills = async (req, res, next) => {
 
 
     const allBills = await Bill.find({ userId: req.user.id })
-      .sort({ createdAt: sortDirection })
+      .sort({ orderedAt: sortDirection })
       .skip(startIndex)
       .limit(limit);
     res.status(201).json({ allBills, totalBills, totalLastMonthBills });

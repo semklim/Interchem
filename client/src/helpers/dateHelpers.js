@@ -5,13 +5,23 @@ export function billIsExpires(date) {
   return duration > 86400;
 }
 
-export const formateDate = (date) => {
+export const formateDate = (date, precisely = false) => {
+
+  if (precisely) {
+    return new Intl.DateTimeFormat('uk', {
+      weekday: 'long',
+      year: '2-digit',
+      month: '2-digit',
+      day: '2-digit',
+      hour: 'numeric',
+      minute: 'numeric',
+    }).format(new Date(date));
+  }
+
   return new Intl.DateTimeFormat('uk', {
-    weekday: 'long',
+    weekday: 'short',
     year: '2-digit',
     month: '2-digit',
     day: '2-digit',
-    hour: 'numeric',
-    minute: 'numeric',
   }).format(new Date(date));
 };

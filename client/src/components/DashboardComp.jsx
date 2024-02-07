@@ -6,21 +6,32 @@ import { LuCroissant } from 'react-icons/lu';
 import { Button, Table } from 'flowbite-react';
 import { Link } from 'react-router-dom';
 import { billIsExpires, formateDate } from '../helpers/dateHelpers';
+import { ModalAlert } from './ModalAlert';
 
 export default function DashboardComp() {
 	const [totalBills, setTotalBills] = useState(0);
 	const [lastMonthBills, setLastMonthBills] = useState(0);
 	const [lastDayBills, setLastDayBills] = useState(0);
+	const [showModal, setShowModal] = useState(false);
+	const [billIdToDelete, setBillIdToDelete] = useState('');
 	const { currentUser } = useSelector((state) => state.user);
 
-	const deleteBill = async (e, billId) => {
+	const validCheckDate = (date) => {
+		const now = new Date(date);
+		let tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).toISOString();
+		return formateDate(tomorrow);
+	};
+
+	const deleteBill = async () => {
+		setShowModal(false);
 		try {
-			const res = await fetch('/api/bill/delete/' + billId, {
+			const res = await fetch('/api/bill/delete/' + billIdToDelete, {
 				method: 'DELETE',
 			});
 			const data = await res.json();
 			if (res.ok) {
-				setLastDayBills((prev) => prev.filter((bill) => bill._id !== billId));
+				setLastDayBills((prev) => prev.filter((bill) => bill._id !== billIdToDelete));
+				setShowModal(false);
 			} else {
 				console.log(data.message);
 			}
@@ -126,8 +137,8 @@ export default function DashboardComp() {
 					{lastDayBills &&
 						lastDayBills.map((bill) => (
 							<div key={bill._id}>
-								<h3 className='py-2 uppercase font-bold text-gray-700 dark:text-gray-200'>
-									{formateDate(bill.orderedAt)}
+								<h3 className='py-2 font-bold text-gray-700 dark:text-gray-200'>
+									Чек на {validCheckDate(bill.createdAt)}
 								</h3>
 								<Table hoverable className='border-2 md:text-center'>
 									<Table.Head>
@@ -157,7 +168,10 @@ export default function DashboardComp() {
 													<Button
 														className='absolute left-[60%] top-[50%] translate-y-[-50%] translate-x-[-50%] bg-gradient-to-bl from-[#b44141] to-[#800e0e] md:static md:transform-none'
 														disabled={billIsExpires(bill.createdAt)}
-														onClick={(e) => deleteBill(e, bill._id)}
+														onClick={() => {
+															setShowModal(true);
+															setBillIdToDelete(bill._id);
+														}}
 													>
 														Відмінити
 													</Button>
@@ -178,6 +192,7 @@ export default function DashboardComp() {
 						))}
 				</div>
 			</div>
+			<ModalAlert showModal={showModal} setShowModal={setShowModal} handleDeleteBill={deleteBill} />
 		</div>
 	);
 }
