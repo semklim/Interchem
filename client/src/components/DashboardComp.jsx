@@ -150,15 +150,19 @@ export default function DashboardComp() {
 											);
 										})}
 										<Table.Row className='font-medium'>
-											<Table.Cell className='px-0 md:px-6 relative'>
-												<Button
-													className='absolute left-[60%] top-[50%] translate-y-[-50%] translate-x-[-50%] bg-gradient-to-bl from-[#b44141] to-[#800e0e] md:static md:transform-none'
-													disabled={billIsExpires(bill.createdAt)}
-													onClick={(e) => deleteBill(e, bill._id)}
-												>
-													Відмінити
-												</Button>
-											</Table.Cell>
+											{billIsExpires(bill.createdAt) ? (
+												<Table.Cell className='text-center'>Чек поверненню не підлягає</Table.Cell>
+											) : (
+												<Table.Cell className='px-0 md:px-6 relative'>
+													<Button
+														className='absolute left-[60%] top-[50%] translate-y-[-50%] translate-x-[-50%] bg-gradient-to-bl from-[#b44141] to-[#800e0e] md:static md:transform-none'
+														disabled={billIsExpires(bill.createdAt)}
+														onClick={(e) => deleteBill(e, bill._id)}
+													>
+														Відмінити
+													</Button>
+												</Table.Cell>
+											)}
 											<Table.Cell colSpan={2} className='pr-0 text-center whitespace-pre-line'>
 												<h3 className='text-center md:flex md:justify-center gap-2'>
 													<div>Загальна ціна</div>
