@@ -89,7 +89,7 @@ export default memo(function Home() {
         </label>
       </form>
       {foods && foods.length > 0 ? (
-        <div className="flex flex-wrap gap-4 mb-3 sm:max-w-3xl mx-auto select-none">
+        <div className="flex flex-wrap gap-4 mb-3 max-w-3xl sm:min-w-[60%] mx-auto select-none">
           {foods.map((food) => (
             <FoodCard
               key={food._id}
