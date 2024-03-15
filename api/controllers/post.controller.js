@@ -41,7 +41,7 @@ export const getFoodByShift = async (req, res, next) => {
   }
   const shift = req.query.shift;
   try {
-    const food = await Food.find({ shift }).exec();
+    const food = await Food.find({ shift, createdAt: { $gte: createDateBeforeToday({ day: 1 }) } }).exec();
 
     res.status(200).json({
       food,
